@@ -39,14 +39,15 @@ router.get('/getOpenId', async function (req, res) {
 	console.log('get code:', code)
 
 	if (!code) {
+		console.log('当前未获取到 code 码')
 		res.json(util.handleFailure('当前未获取到 code 码'))
 	} else {
 		const r = await common.getAccessToken(code)
 
-		console.log('get access token:', r)
-
 		if (r.code === 0) {
-			let data = r.data
+			let data = r.data.data
+			console.log('data:', data)
+			console.log('get access token:', data.access_token)
 			let expireTime = 1000 * 60 * 1
 			res.cookie('openId', data.openid, {maxAge: expireTime})
 			const redirectUrl = cache.get('redirectUrl')
